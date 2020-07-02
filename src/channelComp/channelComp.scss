@@ -1,0 +1,31 @@
+.channel{
+    .card{
+        border: 1px solid black;
+        margin-bottom: 10px;
+        width: 100%;
+        padding: 20px 0px;
+        min-height: 200px;
+        .subjectPhoto{
+            display: inline-flex;
+            width: 10%;
+        }
+        .contentDetails{
+            display: inline-flex;
+            width: 70%;
+            .title{
+                display: inline-flex;
+            }
+            .description{
+                display: inline-flex;
+            }
+        }
+        .authorDetails{
+            display: inline-flex;
+            width: 10%;
+        }
+        .time{
+            display: inline-flex;
+            width: 10%;
+        }
+    }
+}
