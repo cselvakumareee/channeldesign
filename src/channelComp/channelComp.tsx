@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./channelComp.scss";
 import channelData from "../channelData/channelData.json";
+import ViewComp from "../viewComp/viewComp";
 
 class ChannelComp extends Component {
   constructor(props: any) {
@@ -9,38 +10,35 @@ class ChannelComp extends Component {
 
   state: any = {
     loadedPost: [],
-    orginalData: [],
-    dublicateData: []
+    viewComponent:[]
   };
 
   componentDidMount() {
-    this.setState({ orginalData: channelData });
     this.sortData();
   }
 
-   printUniqueResults = (arrayOfObj:any, key:any) =>{
-    return arrayOfObj.filter((item:any, index:any, array:any) => {
-      return array.map((mapItem:any) => mapItem[key]).indexOf(item[key]) !== index
-    })
-  }
+  numericToDateFormater = (arr: any, count: any) => {
+    let monthFormat: any = arr[count].time.split(" ");
+    let updateMonthFormat: any = new Date(monthFormat[0]).toString();
+    arr[count].originalMonFormat = updateMonthFormat;
+    arr[count].dublicate = false;
 
-  updateDayNight = (data: any) => {
+    let finalMonthFormat: any = updateMonthFormat.split(" ");
+    let dateMonthFormat: any =
+      finalMonthFormat[0] +
+      ", " +
+      finalMonthFormat[1] +
+      finalMonthFormat[2] +
+      ", " +
+      finalMonthFormat[3];
+
+    arr[count].monFormat = dateMonthFormat;
+    arr[count].index = count;
+  };
+
+  updateAmPmTime = (data: any) => {
     for (let j = 0; j < data.length; j++) {
-      let monthFormat: any = data[j].time.split(" ");
-      let updateMonthFormat: any = new Date(monthFormat[0]).toString();
-      data[j].originalMonFormat = updateMonthFormat;
-      data[j].dublicate = false;
-      
-      let finalMonthFormat: any = updateMonthFormat.split(" ");
-      let dateMonthFormat: any =
-        finalMonthFormat[0] +
-        ", " +
-        finalMonthFormat[1] +
-        finalMonthFormat[2] +
-        ", " +
-        finalMonthFormat[3];
-
-      data[j].monFormat = dateMonthFormat;
+      this.numericToDateFormater(data, j);
       let splitHour = data[j].time.split(" ");
 
       let timeString = splitHour[1];
@@ -56,12 +54,8 @@ class ChannelComp extends Component {
         data[j].hourFormat = tempVal + " - " + (h + 1 + ":00" + ampm);
       }
     }
-    const result = this.printUniqueResults(data, 'originalMonFormat');
-    console.log("result"+result);
-    this.setState({dublicateDAta: result})
-    
     this.setState({ loadedPost: data });
-    console.log("final state data"+this.state.loadedpost);
+    console.log("final state data" + this.state.loadedpost);
   };
 
   sortData() {
@@ -69,48 +63,45 @@ class ChannelComp extends Component {
     let sortedData: any = newData.slice().sort((a: any, b: any) => {
       return +new Date(a.time) - +new Date(b.time);
     });
-    this.updateDayNight(sortedData);
-    //this.setState({ loadedPost: sortedData });
+    this.updateAmPmTime(sortedData);
+  }
+  
+  findDublicate(value:any){
+    if(this.state.viewComponent.indexOf(value) < 0)
+    {
+      this.state.viewComponent.push(value);
+      return true;
+    }
+    else{
+      return false;
+    }
+    
   }
 
   render() {
+  
     return (
       <div className="channel">
         {this.state.loadedPost.map((data: any) => {
-          return (
-            <div className="card-wrapper">
-              <p>{data.monFormat}</p>
-          <p>{data.dublicate}</p>
-              <div className="card" key={Date.now()}>
-                <div className="subjectPhoto">
-                  <img
-                    src={data.subjectPhotoUrl}
-                    width="50px"
-                    height="50px"
-                    alt="subject Photo"
-                  />
-                </div>
-
-                <div className="contentDetails">
-                  <div className="title">{data.title}</div>
-                  <div className="description">{data.description}</div>
-                </div>
-
-                <div className="authorDetails">
-                  <span className="instructorPhoto">
-                    <img
-                      src={data.instructorPhotoUrl}
-                      width="50px"
-                      height="50px"
-                      alt="instructor photo"
-                    />
-                  </span>
-                  <span className="name">{data.instructorName}</span>
-                </div>
-                <div className="time">{data.hourFormat}</div>
-              </div>
-            </div>
-          );
+          return(
+            this.findDublicate(data.time.substr(0,10)) ? <ViewComp
+            monthFormat={data.monFormat}
+            key={data.index}
+            courseImgSrc={data.subjectPhotoUrl}
+            contentTitle={data.title}
+            contentDescription={data.description}
+            authorImgSrc={data.instructorPhotoUrl}
+            authorName={data.instructorName}
+            courseDuration={data.hourFormat}
+          /> :<ViewComp
+          key={data.index}
+          courseImgSrc={data.subjectPhotoUrl}
+          contentTitle={data.title}
+          contentDescription={data.description}
+          authorImgSrc={data.instructorPhotoUrl}
+          authorName={data.instructorName}
+          courseDuration={data.hourFormat}
+        />)
         })}
         
       </div>
