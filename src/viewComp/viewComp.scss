@@ -1,20 +1,22 @@
+@import 'styleConstants';
+
 .channel{
     .card-wrapper{
         width: 100%;
-        background-color: #f4f4f4;
+        background-color: $wrapperBgColor;
         display: grid;
         justify-content: center;
         h3{
             margin: 0px 0px 10px;
-            color: #4f4c4d;
+            color: $headerColor;
             font-weight: bold;
         }
         .card{
-            border: 1px solid #d3d2d2;
+            border: 1px solid $cardBorderColor;
             margin-bottom: 10px;
             width: 1200px;
             padding: 20px 0px;
-            background-color: #ffffff;
+            background-color: $cardBgColor;
             display: flex;
             .subjectPhoto{
                 display: inline-flex;
@@ -31,7 +33,7 @@
                 padding: 0px 10px;
                 a{
                     text-decoration: none;
-                    color: #231f20;
+                    color: $primaryFontColor;
                 }
                 .title{
                     font-weight: bold;
@@ -55,7 +57,7 @@
                 a{
                     display: inline-flex;
                     text-decoration: none;
-                    color: #231f20;
+                    color: $primaryFontColor;
                 }
             }
             .time{

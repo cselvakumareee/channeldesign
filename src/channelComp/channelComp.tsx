@@ -10,13 +10,14 @@ class ChannelComp extends Component {
 
   state: any = {
     loadedPost: [],
-    viewComponent:[]
+    viewComponent: [],
   };
 
   componentDidMount() {
     this.sortData();
   }
 
+  //To convert Dates(Numbers) to string
   numericToDateFormater = (arr: any, count: any) => {
     let monthFormat: any = arr[count].time.split(" ");
     let updateMonthFormat: any = new Date(monthFormat[0]).toString();
@@ -36,6 +37,7 @@ class ChannelComp extends Component {
     arr[count].index = count;
   };
 
+  //To convert 24Hrs format to 12 Hrs format
   updateAmPmTime = (data: any) => {
     for (let j = 0; j < data.length; j++) {
       this.numericToDateFormater(data, j);
@@ -58,6 +60,7 @@ class ChannelComp extends Component {
     console.log("final state data" + this.state.loadedpost);
   };
 
+  //To sort data based on dates in ascending order
   sortData() {
     let newData: any = channelData;
     let sortedData: any = newData.slice().sort((a: any, b: any) => {
@@ -65,45 +68,44 @@ class ChannelComp extends Component {
     });
     this.updateAmPmTime(sortedData);
   }
-  
-  findDublicate(value:any){
-    if(this.state.viewComponent.indexOf(value) < 0)
-    {
+
+  //To find dublicates in dates
+  findDublicate(value: any) {
+    if (this.state.viewComponent.indexOf(value) < 0) {
       this.state.viewComponent.push(value);
       return true;
-    }
-    else{
+    } else {
       return false;
     }
-    
   }
 
   render() {
-  
     return (
       <div className="channel">
         {this.state.loadedPost.map((data: any) => {
-          return(
-            this.findDublicate(data.time.substr(0,10)) ? <ViewComp
-            monthFormat={data.monFormat}
-            key={data.index}
-            courseImgSrc={data.subjectPhotoUrl}
-            contentTitle={data.title}
-            contentDescription={data.description}
-            authorImgSrc={data.instructorPhotoUrl}
-            authorName={data.instructorName}
-            courseDuration={data.hourFormat}
-          /> :<ViewComp
-          key={data.index}
-          courseImgSrc={data.subjectPhotoUrl}
-          contentTitle={data.title}
-          contentDescription={data.description}
-          authorImgSrc={data.instructorPhotoUrl}
-          authorName={data.instructorName}
-          courseDuration={data.hourFormat}
-        />)
+          return this.findDublicate(data.time.substr(0, 10)) ? (
+            <ViewComp
+              monthFormat={data.monFormat}
+              key={data.index}
+              courseImgSrc={data.subjectPhotoUrl}
+              contentTitle={data.title}
+              contentDescription={data.description}
+              authorImgSrc={data.instructorPhotoUrl}
+              authorName={data.instructorName}
+              courseDuration={data.hourFormat}
+            />
+          ) : (
+            <ViewComp
+              key={data.index}
+              courseImgSrc={data.subjectPhotoUrl}
+              contentTitle={data.title}
+              contentDescription={data.description}
+              authorImgSrc={data.instructorPhotoUrl}
+              authorName={data.instructorName}
+              courseDuration={data.hourFormat}
+            />
+          );
         })}
-        
       </div>
     );
   }
