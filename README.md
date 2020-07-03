@@ -1,3 +1,13 @@
+Hi this project is developed in react tsx(typescript).
+
+To run this project:
+    1. glone this git repo,
+    2. give npm install in terminal it will install all node modules,
+    3. Then give npm start so it will run in local lost.
+    4. To run unit test cases, give npm test in termianl, It will give results of test cases
+        (or)
+    https://channel-design.web.app/# go to that link, I already hosted this project in live using firebase.    
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
